@@ -1,30 +1,24 @@
 # Get-Easyaid Server
 
-Flask API server for Get-Easyaid application.
+Flask API server for generating personalized financial aid requests for Coursera courses.
 
-## Deployment on Render
+## Key Features
 
-This application is configured for deployment on Render.
+- **Smart Caching System**: Scraped course pages are cached in `static/scraps/` directory to avoid redundant web scraping and improve response times
+- **AI-Powered Generation**: Uses Google Generative AI to generate personalized financial aid requests
+- **Course Scraping**: Automatically scrapes Coursera course pages to extract course information and specialization details
+- **MongoDB Integration**: Stores and retrieves course data from MongoDB Atlas
+- **Response Regeneration**: Allows regenerating financial aid requests with the same context
 
-### Environment Variables
+## API Endpoints
 
-Make sure to set the following environment variables in your Render dashboard:
+- `GET /` - Health check endpoint
+- `GET /getAllCourses` - Retrieve all courses from database
+- `POST /submit` - Submit course information and scrape course page
+- `POST /GetPrompt` - Generate personalized financial aid request prompts
+- `POST /regenerate` - Regenerate a financial aid request
 
-- `MONGO_PASS`: MongoDB Atlas password
-- `OPENAI_KEY`: Google Generative AI API key
-- `PORT`: Automatically set by Render (no need to configure)
-
-### Deployment Steps
-
-1. Push your code to GitHub
-2. Connect your repository to Render
-3. Render will automatically detect the `render.yaml` configuration
-4. Set the environment variables (`MONGO_PASS` and `OPENAI_KEY`) in the Render dashboard
-5. Deploy!
-
-The application will be available at `https://your-service-name.onrender.com`
-
-### Local Development
+## Setup
 
 1. Install dependencies:
    ```bash
@@ -35,15 +29,15 @@ The application will be available at `https://your-service-name.onrender.com`
    ```
    MONGO_PASS=your_mongodb_password
    OPENAI_KEY=your_google_genai_api_key
+   OPENAI_KEY2=your_secondary_api_key (Use the same key; key2 is backup)
    ```
 
 3. Run the application:
    ```bash
-   python app.py
+   flask run
    ```
 
-Or using gunicorn:
-```bash
-gunicorn app:app
-```
+## Live Server
 
+<!-- Add your live server URL here -->
+API Server: [Visit server here](https://get-easyaid-server.onrender.com)
