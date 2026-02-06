@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import os
 import requests
+import re
 
 def scrap(currName, url):
     print("Scraping:", url)
@@ -44,14 +45,19 @@ def scrap(currName, url):
                     spec_res = f.read()
                     specSoup = BeautifulSoup(spec_res, 'lxml')
 
-            allCoursesUnder = specSoup.find_all('div', class_="css-zwlk01")
+            allCoursesUnder = specSoup.find_all("h3", class_="cds-119 css-1pxm1ir cds-121")
 
             print(f"Found {len(allCoursesUnder)} course(s) in specialization.")
-            for each in allCoursesUnder:
-                # print(each.text)
-                otherCourseName = ' '.join(each.text.split()[:-2])[:-6]
-                if otherCourseName.lower() != currName.lower():
-                    courselist.append(otherCourseName)
+
+            for h3 in allCoursesUnder:
+                a_tag = h3.find("a")
+                if not a_tag:
+                    continue
+                course_name = a_tag.get_text(strip=True)
+                course_name = re.sub(r"^Course\s*\d+\s*:\s*", "", course_name)
+                print(course_name)
+                if course_name.lower() != currName.lower():
+                    courselist.append(course_name)
         else:
             print("No 'href' found in specialization link.")
         return spec_url, courselist
