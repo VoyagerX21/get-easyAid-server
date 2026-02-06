@@ -60,12 +60,27 @@ def personalisedDetails(data):
 
 @app.get("/")
 def getHome():
-    return jsonify({"msg": "Server running at 5000"})
+    return jsonify({"msg": "Server running"})
 
 @app.get("/getAllCourses")
 def getCourses():
     data = list(mycollection.find({}, {'_id': 0}))
     return jsonify(data)
+
+@app.get("/search")
+def search():
+    query = request.args.get("query")
+    if not query:
+        return jsonify({"success": True, "results": []})
+    search_filter = {
+        "$or": [
+            {"title": { "$regex": query, "$options": "i" }},
+            {"Organization": {"$regex": query, "$options": "i"}}
+        ]
+    }
+    results = list(mycollection.find(search_filter, {"_id": 0}))
+    print(results)
+    return jsonify({"success": True, "results": results})
 
 @app.post("/submit")
 def submit():
