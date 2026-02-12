@@ -18,45 +18,56 @@ first = ". Using only the information provided above, write a personal and since
 second = ". Using only the information provided above, write a personalized 150–200 word explanation in one paragraph about how this course supports my career and academic goals. Include real details from the text (name, institute/organization, academic year or position, and previously completed courses) in a natural way. If any detail is missing, skip it silently rather than adding placeholders like [Your Position] or meta comments. Avoid generic or template phrasing such as 'this course is directly relevant to my objectives'. Focus on the real journey, learning progress, and why the course matters now. Do not include explanations about missing data or instructions for me. Keep a neutral, direct tone without addressing me by name inside the answer. Write the answer in plain text, no bold or italics things."
 
 def personalisedDetails(data):
-    def get_value(key, default=['']):
-        value = data.get(key, default)
-        return value[0] if isinstance(value, list) else value
+    def get_value(key):
+        value = data.get(key, "")
+        if isinstance(value, list):
+            return value[0].strip() if value else ""
+        return str(value).strip()
 
-    name = get_value('name')
-    course = get_value('courseType')
-    specialization = get_value('specialization')
-    institute = get_value('institute')
-    organization = get_value('organization')
-    position = get_value('position')
-    year = get_value('year')
-    courses = data.get('courses', [])
+    name = get_value("name")
+    course = get_value("courseType")
+    specialization = get_value("specialization")
+    institute = get_value("institute")
+    organization = get_value("organization")
+    position = get_value("position")
+    year = get_value("year")
 
-    res = f"My name is {name}, and I am applying for financial aid for the course titled {course} on Coursera."
+    courses = data.get("courses", [])
+    if isinstance(courses, list):
+        courses = ", ".join(courses)
 
-    if specialization:
-        spec_name = specialization.split('/')[-1] if '/' in specialization else specialization
-        res += f" The course is part of the specialization *{spec_name}*, which I actively pursue to strengthen my knowledge."
+    if specialization and "/" in specialization:
+        specialization = specialization.split("/")[-1]
 
-    if courses:
-        if len(courses) > 1:
-            res += f" I have already completed {len(courses)} courses in this specialization, including {', '.join(courses[:-1])}, and {courses[-1]}, which helped me develop a strong foundation."
-        else:
-            res += f" I have completed the course *{courses[0]}* under this specialization and it helped me develop an initial understanding."
+    fields = []
+
+    if name:
+        fields.append(f"Name: {name}")
 
     if institute:
-        if year:
-            res += f" I am currently studying at {institute} in my {year} year, and I am actively planning my academic path toward a clear career direction."
-        else:
-            res += f" I am currently studying at {institute} and working toward a clear academic and career direction."
-    elif organization:
-        if position:
-            res += f" I am currently working at {organization} as a {position}, and I want to expand my skills for professional growth."
-        else:
-            res += f" I am currently working at {organization}, and I want to expand my skills for professional growth."
+        fields.append(f"Institute: {institute}")
 
-    res += " I am deeply motivated to learn, but managing the cost of the course is challenging for me at this stage. Access to financial aid will allow me to continue learning without interruption."
+    if year:
+        fields.append(f"Academic Year: {year}")
 
-    return res
+    if organization:
+        fields.append(f"Organization: {organization}")
+
+    if position:
+        fields.append(f"Position: {position}")
+
+    if courses:
+        fields.append(f"Completed Courses: {courses}")
+
+    if specialization:
+        fields.append(f"Specialization: {specialization}")
+
+    if course:
+        fields.append(f"Course Applying For: {course}")
+
+    structured = "User Details:\n" + "\n".join(fields)
+
+    return structured
 
 @app.get("/")
 def getHome():
@@ -79,7 +90,6 @@ def search():
         ]
     }
     results = list(mycollection.find(search_filter, {"_id": 0}))
-    print(results)
     return jsonify({"success": True, "results": results})
 
 @app.post("/submit")
