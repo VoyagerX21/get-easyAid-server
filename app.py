@@ -14,25 +14,45 @@ db = client["easyAid"]
 mycollection = db["courses"]
 
 global d
-first = """You MUST use the provided user details naturally in the paragraph.
+first = """
+
+You are ONLY allowed to use the user details provided below.
+DO NOT invent, assume, or generate any new personal information.
+If a field is empty, ignore it.
+
+You MUST use at least 2–3 real details from the User Details section.
+
 Task:
 Write a sincere financial aid request in 150–180 words in ONE paragraph.
-Rules:
-- Use real user details naturally
-- Do NOT use generic template phrases
-- Do NOT mention missing info
-- Do NOT add placeholders
-- Plain text only """
 
-second = """You are writing a career and academic goals explanation for a Coursera financial aid application.
-You MUST use the provided user details naturally.
-Task:
-Write a personalized explanation in 150–180 words in ONE paragraph explaining how this course supports career and academic growth.
 Rules:
-- Use real user details naturally
-- Avoid generic phrasing
-- No placeholders
-- Plain text only"""
+- Use only provided details
+- Do NOT invent fake examples
+- Do NOT use placeholder names
+- Do NOT explain what you are doing
+- Do NOT say "no details were provided"
+- Plain text only
+"""
+
+
+second = """
+
+You are ONLY allowed to use the user details provided below.
+DO NOT invent, assume, or generate any new personal information.
+If a field is empty, ignore it.
+
+You MUST use at least 2–3 real details from the User Details section.
+
+Task:
+Write a personalized career goals explanation in 150–180 words in ONE paragraph.
+
+Rules:
+- Use only provided details
+- Do NOT invent fake examples
+- Do NOT use placeholder names
+- Do NOT explain missing data
+- Plain text only
+"""
 
 def personalisedDetails(data):
     def get_value(key):
