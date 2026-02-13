@@ -141,6 +141,7 @@ def getprompt():
     d = personalisedDetails(data)
     p1 = personalisedDetails(data)+first
     p2 = personalisedDetails(data)+second
+    print(p1, p2)
     try:
         return jsonify({
             "success": True,
