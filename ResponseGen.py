@@ -2,61 +2,52 @@ import os
 import time
 import random
 from dotenv import load_dotenv
-from google import genai
+from openai import OpenAI
 
-# Load environment
+# Load environment variables
 load_dotenv()
 
-PRIMARY_KEY = os.getenv("OPENAI_KEY")
-SECONDARY_KEY = os.getenv("OPENAI_KEY2")
+API_KEY = os.getenv("OPENAI_KEY")
 
-def create_client(api_key):
-    return genai.Client(api_key=api_key)
+# Create OpenAI client
+client = OpenAI(api_key=API_KEY)
 
-def get_response_with_key(prompt, api_key, max_retries=3):
-    client = create_client(api_key)
-    
+def get_response(prompt, max_retries=3):
     for attempt in range(max_retries):
         try:
-            response = client.models.generate_content(
-                model="gemini-2.5-flash",
-                contents=prompt
+            response = client.chat.completions.create(
+                model="gpt-5.4-nano",
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7
             )
-            if response.text:
-                return response.text
-            
-            # if response exists but no text, treat as failure
+
+            if response.choices[0].message.content:
+                return response.choices[0].message.content
+
             raise Exception("Empty response")
 
         except Exception as e:
-            print(f"Error with key {api_key}:", e)
+            print("Error:", e)
 
-            # Retry only if overloaded
-            if "503" in str(e) or "overloaded" in str(e).lower():
+            # Retry only for overload / rate limit
+            if "429" in str(e) or "overloaded" in str(e).lower():
                 wait = (2 ** attempt) + random.random()
                 time.sleep(wait)
                 continue
 
-            # No overload → immediately fail
             return None
 
     return None
 
 
 def GetResponse(prompt):
-    # Try primary key
-    result = get_response_with_key(prompt, PRIMARY_KEY)
+    result = get_response(prompt)
     if result:
         return result
 
-    print("⚠ Primary key failed. Trying secondary key...")
-
-    # Try secondary key
-    result = get_response_with_key(prompt, SECONDARY_KEY)
-    if result:
-        return result
-
-    raise Exception("Service temporarily unavailable. Both keys failed.")
+    raise Exception("Service temporarily unavailable.")
 
 
 if __name__ == "__main__":
