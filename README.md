@@ -40,4 +40,4 @@ Flask API server for generating personalized financial aid requests for Coursera
 ## Live Server
 
 <!-- Add your live server URL here -->
-API Server: [Visit server here](https://geteasyserver.khakse.dev)
+API Server: [Visit server here](https://get-easyaid-server.onrender.com)
