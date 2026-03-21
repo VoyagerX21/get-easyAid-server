@@ -47,7 +47,6 @@ def personalisedDetails(data):
         if isinstance(value, list):
             return value[0].strip() if value else ""
         return str(value).strip()
-
     name = get_value("name")
     course = get_value("courseType")
     specialization = get_value("specialization")
@@ -137,7 +136,7 @@ def submit():
 @app.post("/GetPrompt")
 def getprompt():
     global d
-    data = request.form.to_dict(flat=False)
+    data = request.get_json()
     d = personalisedDetails(data)
     p1 = personalisedDetails(data)+first
     p2 = personalisedDetails(data)+second
