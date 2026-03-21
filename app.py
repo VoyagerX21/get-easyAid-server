@@ -13,7 +13,6 @@ client = MongoClient(f"mongodb+srv://VoyagerX21:{os.getenv('MONGO_PASS')}@cluste
 db = client["easyAid"]
 mycollection = db["courses"]
 
-global d
 first = """. Using only the information provided above, write a personal and sincere financial aid request of 150–200 words in a single paragraph. Include the real details from the text (name, institute/organization, academic year or position, and previously completed courses) in a natural way. If any detail is missing, simply skip it and do not add placeholders like [Your Name] or [Course Title], and do not describe what information is missing. Avoid generic phrasing and template-sounding language such as 'this course is directly relevant to my objectives'. Write like a real person explaining their situation and financial need. Do not include explanations, meta comments, or instructions in the answer. Keep the tone neutral and factual without addressing me by name inside the answer. Write the answer in plain text, no bold or italics things. You are writing a financial aid application for a Coursera course.
 
 You MUST use the provided user details naturally in the paragraph.
@@ -133,13 +132,15 @@ def submit():
     }
     return jsonify(res)
 
-@app.post("/GetPrompt")
-def getprompt():
-    global d
-    data = request.get_json()
-    d = personalisedDetails(data)
+def promptGen(data):
     p1 = personalisedDetails(data)+first
     p2 = personalisedDetails(data)+second
+    return [p1, p2]
+
+@app.post("/GetPrompt")
+def getprompt():
+    data = request.get_json()
+    p1, p2 = promptGen(data)
     try:
         return jsonify({
             "success": True,
@@ -166,13 +167,18 @@ def getprompt():
 
 @app.post("/regenerate")
 def regen():
-    global d
     data = request.get_json()
-    if data['boxNumber'] == 1:
-        newRes = GetResponse(d+first)
-    else:
-        newRes = GetResponse(d+second)
-
+    if not data or "payload" not in data or "boxNumber" not in data:
+        return jsonify({"error": "Invalid request"}), 400
+    p1, p2 = promptGen(data["payload"])
+    prompts = {
+        1: p1,
+        2: p2
+    }
+    prompt = prompts.get(data["boxNumber"])
+    if not prompt:
+        return jsonify({"error": "Invalid boxNumber"}), 400
+    newRes = GetResponse(prompt)
     return jsonify({"response": newRes})
 
 if __name__ == "__main__":
