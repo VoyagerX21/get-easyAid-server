@@ -23,27 +23,17 @@ def get_response(prompt, max_retries=3):
                 "max_tokens": 1024,
                 "temperature": 0.6,
                 "top_p": 0.95,
-                "stream": True,
                 "chat_template_kwargs": {"enable_thinking": False},  # 🔴 disable reasoning noise
             }
             response = requests.post(invoke_url, headers=headers, json=payload, stream=True)
             if response.status_code != 200:
                 raise Exception(f"{response.status_code} - {response.text}")
-            result = ""
-            for line in response.iter_lines():
-                if not line:
-                    continue
-                line = line.decode("utf-8")
-                if line.strip() == "data: [DONE]":
-                    break
-                if line.startswith("data: "):
-                    try:
-                        data = json.loads(line[6:])
-                        delta = data["choices"][0]["delta"]
-                        if "content" in delta and delta["content"]:
-                            result += delta["content"]
-                    except json.JSONDecodeError:
-                        continue
+
+            data = response.json()
+            message = data["choices"][0]["message"]
+
+            result = message.get("content", "")
+
             return result
         except Exception as e:
             print("Error:", e)
