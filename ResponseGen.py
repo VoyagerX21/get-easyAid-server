@@ -15,7 +15,7 @@ def get_response(prompt, max_retries=3):
             invoke_url = "https://integrate.api.nvidia.com/v1/chat/completions"
             headers = {
                 "Authorization": f"Bearer {KEY}",
-                "Accept": "text/event-stream"
+                "Content-Type": "application/json"
             }
             payload = {
                 "model": "qwen/qwen3.5-122b-a10b",
