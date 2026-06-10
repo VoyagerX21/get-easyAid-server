@@ -7,7 +7,7 @@ app = create_app()
 
 with app.app_context():
 
-    with open("app/data/easyAid.courses.json", encoding="utf-8") as f:
+    with open("app/data/easyAidcourses.json", encoding="utf-8") as f:
         courses = json.load(f)
     for i in courses:
         course = Course(
