@@ -8,7 +8,7 @@ def submitReq():
     data = request.get_json()
     obj = data.get('obj')
     course = Course.query.filter_by(title=obj["title"], url=obj["URL"]).first()
-    print(course)
+    
     if course.seenStatus:
         if course.specstatus:
             url, courselist = course.specurl, [i.name for i in course.speclist]
@@ -26,7 +26,7 @@ def submitReq():
             for course_name in courselist:
                 specs.append(
                     Spec(
-                        name=course_name,
+                        name=course_name[1],
                         course_id=course.id
                     )
                 )
