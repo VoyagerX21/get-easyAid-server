@@ -8,10 +8,15 @@ def submitReq():
     data = request.get_json()
     obj = data.get('obj')
     course = Course.query.filter_by(title=obj["title"], url=obj["URL"]).first()
-    
+
     if course.seenStatus:
         if course.specstatus:
-            url, courselist = course.specurl, [i.name for i in course.speclist]
+            courselist = []
+            url = course.specurl
+            ptr = 0
+            for i in course.speclist:
+                courselist.append([ptr, i.name])
+                ptr+=1
         else:
             url, courselist = None, []
     else:
