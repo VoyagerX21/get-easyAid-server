@@ -22,16 +22,15 @@ def submitReq():
             url, courselist = scrapped
             course.specurl = url
             courselist = list(enumerate(courselist))
-            print(courselist)
-            i = 0
-            while i < len(courselist):
-                temp = Spec(
-                    name=courselist[i],
-                    course_id=course.id
+            specs = []
+            for course_name in courselist:
+                specs.append(
+                    Spec(
+                        name=course_name,
+                        course_id=course.id
+                    )
                 )
-                courselist[i] = temp
-                i+=1
-            db.session.add_all(courselist)
+            db.session.add_all(specs)
         else:
             course.specstatus = False
             url, courselist = None, []
