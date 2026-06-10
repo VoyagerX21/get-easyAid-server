@@ -1,8 +1,6 @@
-from app.extensions import db
+from app.models.courses import Course
 from flask import jsonify
 
-mycollection = db["courses"]
-
 def getallcourses():
-    data = list(mycollection.find({}, {'_id': 0}))
+    data = Course.query.all()
     return jsonify(data)

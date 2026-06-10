@@ -1,5 +1,5 @@
-from app.config.config import Config
-from pymongo import MongoClient
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
-client = MongoClient(Config.MONGO_URI)
-db = client["easyAid"]
+db = SQLAlchemy()
+migrate = Migrate()

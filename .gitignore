@@ -2,3 +2,4 @@
 static/scraps/
 __pycache__/
 scrap_meta/
+instance/*.db
