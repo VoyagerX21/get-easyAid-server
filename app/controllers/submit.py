@@ -8,6 +8,7 @@ def submitReq():
     data = request.get_json()
     obj = data.get('obj')
     course = Course.query.filter_by(title=obj["title"], url=obj["URL"]).first()
+    print(course)
     if course.seenStatus:
         if course.specstatus:
             url, courselist = course.specurl, [i.name for i in course.speclist]
@@ -21,6 +22,7 @@ def submitReq():
             url, courselist = scrapped
             course.specurl = url
             courselist = list(enumerate(courselist))
+            print(courselist)
             i = 0
             while i < len(courselist):
                 temp = Spec(
