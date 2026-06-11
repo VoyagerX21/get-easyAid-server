@@ -16,6 +16,7 @@ def create_app(config=Config):
     from app.routes.submit import submit_bp
     from app.routes.getprompt import getprompt_bp
     from app.routes.regenerate import regen_bp
+    from app.routes.job import job_bp
     from app.models.courses import Course
     from app.models.specs import Spec
 
@@ -24,6 +25,7 @@ def create_app(config=Config):
     app.register_blueprint(submit_bp, url_prefix="/submit")
     app.register_blueprint(getprompt_bp, url_prefix="/GetPrompt")
     app.register_blueprint(regen_bp, url_prefix="/regenerate")
+    app.register_blueprint(job_bp, url_prefix="/job")
 
     @app.get("/")
     def getHome():

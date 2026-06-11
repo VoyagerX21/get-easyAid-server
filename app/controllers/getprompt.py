@@ -1,30 +1,27 @@
-from flask import request, jsonify
-from app.services.promptgen import promptGen
-from app.services.responsegen import GetResponse
+from flask import request, jsonify, current_app
+from app.models.aidrequest import Aidrequest
+from app.extensions import db
+from threading import Thread
+from app.services.ai_jobs import aiCall
 
 def prompt():
-    data = request.get_json()
-    p1, p2 = promptGen(data)
-    try:
+    data = request.get_json(silent=True)
+    if not data:
         return jsonify({
-            "success": True,
-            "firstRes": GetResponse(p1),
-            "secondRes" : GetResponse(p2)
-        })
-    except Exception as e:
-        if "503" in str(e) or "overloaded" in str(e):
-            return jsonify({
-                "success": False,
-                "statusCode": 503,
-                "title": "Service Temporarily Unavailable",
-                "desc": "Our AI service is currently experiencing high traffic. Please try again in a few moments.",
-                "btn": "Retry"
-            })
-        else:
-            return jsonify({
-                "success": False,
-                "statusCode": 500,
-                "title": "Internal Server Error",
-                "desc": "Something went wrong. Please try again later.",
-                "btn": "Try Again"
-            })
+            "success": False,
+            "message": "Invalid payload"
+        }), 400
+    job = Aidrequest(
+        payload=data
+    )
+    db.session.add(job)
+    db.session.commit()
+    Thread(
+        target=aiCall,
+        args=(job.id, current_app._get_current_object()),
+        daemon=True
+    ).start()
+    return jsonify({
+        "job_id": job.id,
+        "success": True
+    }), 202
