@@ -11,12 +11,14 @@ def get_response(prompt, max_retries=3):
             payload = {
                 "model": "qwen/qwen3.5-122b-a10b",
                 "messages": [{"role": "user", "content": f"{prompt}"}],
-                "max_tokens": 1024,
+                "max_tokens": 400,
                 "temperature": 0.6,
                 "top_p": 0.95,
                 "chat_template_kwargs": {"enable_thinking": False},  # 🔴 disable reasoning noise
             }
-            response = requests.post(invoke_url, headers=headers, json=payload, stream=True)
+            start=time.perf_counter()
+            response = requests.post(invoke_url, headers=headers, json=payload, timeout=120)
+            print(f"Request took {time.perf_counter()-start:.2f}s")
             if response.status_code != 200:
                 raise Exception(f"{response.status_code} - {response.text}")
             data = response.json()
