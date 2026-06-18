@@ -131,6 +131,14 @@ docker compose down
 docker compose logs -f
 ```
 
+### Seed Initial Course Data
+
+After the container starts for the first time, populate the database with the course catalog:
+
+```bash
+docker compose exec api python -m app.scripts.addall
+```
+
 ### Database Persistence
 
 SQLite data is stored using a Docker volume, ensuring course data and generated requests persist across container restarts.
