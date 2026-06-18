@@ -9,7 +9,7 @@ def get_response(prompt, max_retries=3):
             invoke_url = Config.INVOKE_URL
             headers = Config.HEADERS
             payload = {
-                "model": "qwen/qwen3.5-122b-a10b",
+                "model": "meta/llama-3.3-70b-instruct",
                 "messages": [{"role": "user", "content": f"{prompt}"}],
                 "max_tokens": 400,
                 "temperature": 0.6,
