@@ -1,0 +1,14 @@
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - KEY=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
+      - SQLITE_URI=sqlite:////api/instance/course.db
+    volumes:
+      - sqlite_data:/api/instance
+
+volumes:
+  sqlite_data:

@@ -1,0 +1,7 @@
+instance/
+scrap_meta/
+static/
+.env
+.git
+*.pyc
+__pycache__/

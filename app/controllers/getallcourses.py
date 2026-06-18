@@ -3,4 +3,4 @@ from flask import jsonify
 
 def getallcourses():
     data = Course.query.all()
-    return jsonify(data)
+    return jsonify([i.to_dict() for i in data])
