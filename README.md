@@ -99,7 +99,49 @@ The main job flow is asynchronous: `/GetPrompt` creates an `Aidrequest` record, 
 - CORS is enabled for the API.
 - AI responses are generated through the service configured in `app/config/config.py`.
 
-## Docker
+### Run from Docker Hub
+
+If you don't want to build the project locally, you can run the published Docker image directly from Docker Hub.
+
+#### 1. Pull the Image
+
+```bash
+docker pull voyagerx21/geteasyserver:v3
+```
+
+#### 2. Create a Persistent Volume
+
+```bash
+docker volume create sqlite_data
+```
+
+This volume stores the SQLite database and preserves course data and generated requests across container restarts.
+
+#### 3. Run the Container
+
+```bash
+docker run \
+-p 5000:5000 \
+-v sqlite_data:/api/instance \
+-e KEY=YOUR_API_KEY \
+-e SQLITE_URI=sqlite:////api/instance/course.db \
+voyagerx21/geteasyserver:v3
+```
+
+On first startup, the container will:
+
+* Run database migrations
+* Create the SQLite database
+* Seed the course catalog automatically (if the database is empty)
+* Start the Gunicorn server
+
+The API will then be available at:
+
+```text
+http://localhost:5000
+```
+
+## Docker Locally
 
 ### Build and Run
 

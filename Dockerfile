@@ -2,6 +2,8 @@ FROM python:3.12-slim
 
 WORKDIR /api
 
+RUN mkdir -p /api/instance
+
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
@@ -15,4 +17,4 @@ RUN chmod +x entrypoint.sh
 
 EXPOSE 5000
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+ENTRYPOINT [ "sh", "./entrypoint.sh" ]
