@@ -204,4 +204,4 @@ SQLite data is stored using a Docker volume, ensuring course data and generated 
 
 ## Live Server
 
-API Server: [Visit server here](https://geteasyserver.khakse.dev/)
+API Server: [Visit server here](https://geteasyserver.khakse.dev/health)
