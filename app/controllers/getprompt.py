@@ -1,11 +1,10 @@
-from flask import request, jsonify, current_app
+from flask import jsonify, current_app
 from app.models.aidrequest import Aidrequest
 from app.extensions import db
 from threading import Thread
 from app.services.ai_jobs import aiCall
 
-def prompt():
-    data = request.get_json(silent=True)
+def prompt(data):
     if not data:
         return jsonify({
             "success": False,

@@ -19,14 +19,16 @@ def personalisedDetails(data):
     fields = []
     if name:
         fields.append(f"Name: {name}")
-    if institute:
-        fields.append(f"Institute: {institute}")
-    if year:
-        fields.append(f"Academic Year: {year}")
-    if organization:
-        fields.append(f"Organization: {organization}")
-    if position:
-        fields.append(f"Position: {position}")
+    if get_value("status") == "student":
+        if institute:
+            fields.append(f"Institute: {institute}")
+        if year:
+            fields.append(f"Academic Year: {year}")
+    else:
+        if organization:
+            fields.append(f"Organization: {organization}")
+        if position:
+            fields.append(f"Position: {position}")
     if courses:
         fields.append(f"Completed Courses: {courses}")
     if specialization:

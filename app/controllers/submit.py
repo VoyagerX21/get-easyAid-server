@@ -1,11 +1,10 @@
-from flask import request, jsonify
+from flask import jsonify
 from app.utils.scrapepage import scrap
 from app.extensions import db
 from app.models.courses import Course
 from app.models.specs import Spec
 
-def submitReq():
-    data = request.get_json()
+def submitReq(data):
     obj = data.get('obj')
     course = Course.query.filter_by(title=obj["title"], url=obj["URL"]).first()
 

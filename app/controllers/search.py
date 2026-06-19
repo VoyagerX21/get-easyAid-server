@@ -1,8 +1,8 @@
-from flask import request, jsonify
+from flask import jsonify
 from app.models.courses import Course
 
-def searchCourse():
-    query = request.args.get("query", "").strip()
+def searchCourse(args):
+    query = args.get("query", "").strip()
 
     if not query:
         return jsonify({"success": True, "results": []})

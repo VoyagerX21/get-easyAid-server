@@ -16,6 +16,7 @@ The project now uses a blueprint-based Flask layout:
 - `app/services/` handles the AI request flow and prompt construction.
 - `app/models/` defines the persisted entities for courses, specializations, and AI jobs.
 - `app/utils/scrapepage.py` caches scraped Coursera HTML in `static/scraps/` so repeated requests do not re-download the same pages.
+- `flask-smorest` powers the OpenAPI/Swagger documentation exposed at `/docs`.
 
 The main job flow is asynchronous: `/GetPrompt` creates an `Aidrequest` record, starts a background thread, and `/job/<jobid>` is used to check completion or retry generation.
 
@@ -27,6 +28,7 @@ The main job flow is asynchronous: `/GetPrompt` creates an `Aidrequest` record, 
 - Background AI generation for financial aid responses
 - Retry support for failed or partial generation jobs
 - Database-backed caching of scraped course metadata to avoid repeated Coursera requests
+- Swagger/OpenAPI docs at `/docs`
 
 ## Tech Stack
 
@@ -36,6 +38,7 @@ The main job flow is asynchronous: `/GetPrompt` creates an `Aidrequest` record, 
    - SQLAlchemy
    - Flask-Migrate
    - Gunicorn
+   - Marshmallow
 
    Database:
    - SQLite
@@ -46,6 +49,9 @@ The main job flow is asynchronous: `/GetPrompt` creates an `Aidrequest` record, 
    Data Collection:
    - BeautifulSoup
 
+   API Docs:
+   - Flask-Smorest / Swagger UI
+
    Deployment:
    - Docker
    - Docker Compose
@@ -54,14 +60,15 @@ The main job flow is asynchronous: `/GetPrompt` creates an `Aidrequest` record, 
 
 ## API Endpoints
 
-- `GET /` - Health check that returns `{"msg": "API running"}`
-- `GET /getAllCourses/` - Return all stored courses
+- `GET /health` - Health check that returns `{"msg": "API running"}`
+- `GET /health` - Health check that returns the API status payload
+- `GET /getAllCourses/?page=&limit=` - Return all stored paginated courses
 - `GET /search/?query=...` - Search courses by title or organization
 - `POST /submit/` - Submit a course payload and scrape the Coursera page
 - `POST /GetPrompt/` - Create an AI generation job from a payload
-- `POST /regenerate/` - Regenerate one response box from a saved payload
 - `GET /job/<jobid>` - Check job status and fetch results when complete
 - `POST /job/retry/<jobid>/<num>` - Retry generation for box 1, 2, or both
+- `GET /docs` - Swagger UI for the API specification
 
 ## Data Model
 
@@ -96,8 +103,10 @@ The main job flow is asynchronous: `/GetPrompt` creates an `Aidrequest` record, 
 
 - Scraped HTML is cached under `static/scraps/`.
 - The app uses Flask-SQLAlchemy and Flask-Migrate.
+- The app uses Flask-Smorest for request/response schemas and API docs.
 - CORS is enabled for the API.
 - AI responses are generated through the service configured in `app/config/config.py`.
+- Swagger UI is available at `/docs`.
 
 ### Run from Docker Hub
 
