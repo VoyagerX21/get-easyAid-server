@@ -7,6 +7,7 @@ app = create_app()
 
 with app.app_context():
 
+    print("Getting the dB ready... please wait...")
     if Course.query.count() > 0:
         print("Courses already exist")
         exit()
