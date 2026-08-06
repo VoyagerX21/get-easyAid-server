@@ -9,6 +9,7 @@ class Config:
         "Authorization": f"Bearer {os.getenv("KEY")}",
         "Content-Type": "application/json"
     }
+    GEMINI_API_KEY=os.getenv("GEMINI_API_KEY")
     SQLALCHEMY_DATABASE_URI=os.getenv("SQLITE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     API_TITLE='Get-EasyAid'

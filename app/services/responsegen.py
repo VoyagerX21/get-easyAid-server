@@ -1,34 +1,25 @@
 import time
 import random
-import requests
+from google import genai
 from app.config.config import Config
 
+client = genai.Client(api_key=Config.GEMINI_API_KEY)
+
 def get_response(prompt, max_retries=3):
-    for _ in range(max_retries):
+    for attempt in range(max_retries):
         try:
-            invoke_url = Config.INVOKE_URL
-            headers = Config.HEADERS
-            payload = {
-                "model": "meta/llama-3.3-70b-instruct",
-                "messages": [{"role": "user", "content": f"{prompt}"}],
-                "max_tokens": 400,
-                "temperature": 0.6,
-                "top_p": 0.95,
-                "chat_template_kwargs": {"enable_thinking": False},  # 🔴 disable reasoning noise
-            }
-            response = requests.post(invoke_url, headers=headers, json=payload, timeout=120)
-            if response.status_code != 200:
-                raise Exception(f"{response.status_code} - {response.text}")
-            data = response.json()
-            message = data["choices"][0]["message"]
-            result = message.get("content", "")
-            return result
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt,
+            )
+            return response.text
         except Exception as e:
-            if "429" in str(e) or "quota" in str(e).lower():
-                wait = (2 ** _) + random.random()
+            if "429" in str(e):
+                wait = (2 ** attempt) + random.random()
                 time.sleep(wait)
                 continue
-            return None 
+            print(f"Gemini Error: {e}")
+            return None
     return None
 
 def GetResponse(prompt):
