@@ -4,11 +4,11 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class Config:
-    INVOKE_URL='https://integrate.api.nvidia.com/v1/chat/completions'
-    HEADERS={
-        "Authorization": f"Bearer {os.getenv("KEY")}",
-        "Content-Type": "application/json"
-    }
+    # INVOKE_URL='https://integrate.api.nvidia.com/v1/chat/completions'
+    # HEADERS={
+    #     "Authorization": f"Bearer {os.getenv("KEY")}",
+    #     "Content-Type": "application/json"
+    # }
     GEMINI_API_KEY=os.getenv("GEMINI_API_KEY")
     SQLALCHEMY_DATABASE_URI=os.getenv("SQLITE_URI")
     SQLALCHEMY_TRACK_MODIFICATIONS = False

@@ -132,9 +132,9 @@ This volume stores the SQLite database and preserves course data and generated r
 docker run \
 -p 5000:5000 \
 -v sqlite_data:/api/instance \
--e KEY=YOUR_API_KEY \
 -e SQLITE_URI=sqlite:////api/instance/course.db \
-voyagerx21/geteasyserver:v3
+-e GEMINI_API_KEY=YOUR_API_KEY \
+voyagerx21/geteasyserver:latest
 ```
 
 On first startup, the container will:
