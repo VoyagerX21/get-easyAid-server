@@ -52,18 +52,18 @@ jobs:
 
             echo "Waiting for backend to become healthy..."
 
-            for i in {1..12}; do
+            for i in $(seq 1 12); do
               if curl --fail --silent http://127.0.0.1:5000/health; then
-                echo ""
                 echo "Backend is healthy."
-                exit 0
+                break
               fi
-
               echo "Backend not ready yet... attempt $i/12"
               sleep 5
             done
 
-            echo "Backend failed to become healthy."
-            docker compose logs --tail 100 backend
-            exit 1
+            if ! curl --fail --silent http://127.0.0.1:5000/health; then
+              echo "Backend failed to become healthy."
+              docker compose logs --tail 100 backend
+              exit 1
+            fi
           EOF
