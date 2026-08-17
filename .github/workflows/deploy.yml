@@ -50,7 +50,22 @@ jobs:
             docker compose pull backend
             docker compose up -d backend
 
-            docker compose ps backend
+            echo "Waiting for backend to become healthy..."
 
-            curl --fail http://127.0.0.1:5000/health
+            for i in {1..12}; do
+              if curl --fail --silent http://127.0.0.1:5000/health; then
+                echo ""
+                echo "Backend is healthy."
+                docker compose ps backend
+                exit 0
+              fi
+
+              echo "Backend not ready yet... attempt $i/12"
+              sleep 5
+            done
+
+            echo "Backend failed to become healthy."
+            echo "Backend logs:"
+            docker compose logs --tail 100 backend
+            exit 1
           EOF
