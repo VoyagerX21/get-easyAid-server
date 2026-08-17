@@ -56,7 +56,6 @@ jobs:
               if curl --fail --silent http://127.0.0.1:5000/health; then
                 echo ""
                 echo "Backend is healthy."
-                docker compose ps backend
                 exit 0
               fi
 
@@ -65,7 +64,6 @@ jobs:
             done
 
             echo "Backend failed to become healthy."
-            echo "Backend logs:"
             docker compose logs --tail 100 backend
             exit 1
           EOF
