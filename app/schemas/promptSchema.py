@@ -9,7 +9,7 @@ class PromptReq(Schema):
     name=fields.Str()
     organization=fields.Str()
     position=fields.Str()
-    specialization=fields.Url()
+    specialization=fields.Url(allow_none=True)
     year=fields.Str()
 
 class PromptRes(Schema):
