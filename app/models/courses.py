@@ -20,6 +20,7 @@ class Course(db.Model):
             "id": self.id,
             "title": self.title,
             "rating": self.rating,
+            "org": self.org,
             "URL": self.url,
             "cached": self.seenStatus
         }
