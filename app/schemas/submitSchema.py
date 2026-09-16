@@ -7,6 +7,7 @@ class ObjectSchema(Schema):
     cached=fields.Bool()
     id=fields.UUID()
     rating=fields.Str()
+    obj=fields.Str()
 
 class SubmitReq(Schema):
 
